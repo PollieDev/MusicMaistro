@@ -56,7 +56,7 @@ client.on('message', async message => {
         var command = args[0].startsWith(prefix) ? args[0].substring(prefix.length).toLowerCase() : undefined;
 
         //All messages sent in the desired Music Channel
-        if (message.channel.id == serverInfo[message.guild.id].textChannel) {
+        if (serverInfo[message.guild.id] && message.channel.id == serverInfo[message.guild.id].textChannel) {
             message.delete();
             if (message.author.bot) return;
 
