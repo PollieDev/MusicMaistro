@@ -1,35 +1,35 @@
 module.exports.run = async (client, message, process, args, sql, dev, lockdown, lockIDs) => {
     if (message.author.id != dev) return;
     
-        if (args[0].toLowerCase() == "!lockdown") {
-            lockdown = true;
-            sql.all(`select * from guilds`).then(rows => {
-                rows.forEach(row => {
-                    client.channels.get(row.musicChannelID).send(`**__Music Bot has been disabled. Bot will be restarted soon__**\n\n__Message of the developer:__\n:arrow_right:${args.slice(1).join(" ")}`).then(msg => {
-                        lockIDs.push(msg);
-                    })
-                });
+    if (args[0].toLowerCase() == "!lockdown") {
+        lockdown = true;
+        sql.all(`select * from guilds`).then(rows => {
+            rows.forEach(row => {
+                client.channels.get(row.musicChannelID).send(`**__Music Bot has been disabled. Bot will be restarted soon__**\n\n__Message of the developer:__\n:arrow_right:${args.slice(1).join(" ")}`).then(msg => {
+                    lockIDs.push(msg);
+                })
             });
-        }
-
-        if (args[0].toLowerCase() == "!unlock") {
-            lockdown = false;
-
-            lockIDs.forEach(msg => {
-                msg.delete();
-            });
-
-            sql.all(`select * from guilds`).then(rows => {
-                rows.forEach(row => {
-                    client.channels.get(row.musicChannelID).send(`:arrow_right: **Music Bot back online!** :arrow_left:`).then(msg => {
-                        msg.delete( 20000)
-                    })
-                });
-            });
-        }
-
-
+        });
     }
+
+    if (args[0].toLowerCase() == "!unlock") {
+        lockdown = false;
+
+        lockIDs.forEach(msg => {
+            msg.delete();
+        });
+
+        sql.all(`select * from guilds`).then(rows => {
+            rows.forEach(row => {
+                client.channels.get(row.musicChannelID).send(`:arrow_right: **Music Bot back online!** :arrow_left:`).then(msg => {
+                    msg.delete( 20000)
+                })
+            });
+        });
+    }
+
+
+
 
     if (args[0].toLowerCase() == "->stats") {
         if (args.length == 1) {
@@ -130,5 +130,5 @@ module.exports.run = async (client, message, process, args, sql, dev, lockdown, 
                 }
             })
         }
-
+    }
 }

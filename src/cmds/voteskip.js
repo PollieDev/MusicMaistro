@@ -22,7 +22,7 @@ module.exports.run = (client, message, servers, userVoiceChannel, serverInfo, pr
     }
     serverInfo[message.guild.id].voteSkips.push(message.author.id);
 
-    const embed = new Discord.RichEmbed()
+    const embed = new Discord.MessageEmbed()
     .setColor([255,177,0])
     .setImage(server.currentSong.thumbnail)
     .setAuthor(`${server.currentSong.title} [${server.currentSong.length}]`, 'http://polliedev.com/assets/images/Logo.png', server.currentSong.url)

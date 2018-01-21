@@ -1,5 +1,5 @@
 //config
-var inDevelopment = true;
+var inDevelopment = false;
 const config = require("./tokens.js")
 var dev = config.devId;
 
@@ -435,7 +435,7 @@ function play(connection, message) {
         
         var server = servers[message.guild.id];
 
-        server.dispatcher = connection.playStream(YTDL(server.queue[0].url, {filter: "audioonly"}));
+        server.dispatcher = connection.play(YTDL(server.queue[0].url, {filter: "audioonly"}));
         server.isPlaying = true;
         server.dispatcher.setVolume(0.2)
 
@@ -447,7 +447,7 @@ function play(connection, message) {
             requestedBy: server.queue[0].requestedBy
         }
 
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
         .setColor([255,177,0])
         .setImage(server.currentSong.thumbnail)
         .setAuthor(`${server.currentSong.title} [${server.currentSong.length}]`, 'http://polliedev.com/assets/images/Logo.png', server.currentSong.url)
@@ -458,13 +458,13 @@ function play(connection, message) {
 
         updateQueue(message.guild.id);
 
-        server.dispatcher.on("end", () => {
+        server.dispatcher.on("finish", () => {
             if (server.queue[0]) {
                 play(connection, message);
             } else  {
                 server.isPlaying = false;
                 connection.disconnect(); 
-                const embed = new Discord.RichEmbed()
+                const embed = new Discord.MessageEmbed()
                 .setColor([255,0,0])
                 .setImage('https://i.ytimg.com/vi/l1aNN9FzbFg/maxresdefault.jpg')
                 .setTitle('No song playing currently')
@@ -518,7 +518,7 @@ function updateQueue(guildId) {
 }
 
 function sendInfo(user) {
-    var embed = new Discord.RichEmbed()
+    var embed = new Discord.MessageEmbed()
     .setAuthor("Music Maistro Bot - developed by Pollie", 'http://polliedev.com/assets/images/Logo.png', "http://PollieDev.com/")
     .setColor([255,177,0])
     .setThumbnail(client.user.avatarURL)

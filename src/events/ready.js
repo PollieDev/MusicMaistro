@@ -34,7 +34,7 @@ module.exports.run = (client, sql, serverInfo, inDevelopment) => {
                 return sql.run(`delete from guilds where guildID = '${row.guildID}'`);
             }
 
-            client.guilds.get(row.guildID).channels.get(row.musicChannelID).fetchMessages().then(messages => {
+            client.guilds.get(row.guildID).channels.get(row.musicChannelID).messages.fetch().then(messages => {
                 client.guilds.get(row.guildID).channels.get(row.musicChannelID).bulkDelete(messages)
 
                 if (inDevelopment && row.guildID != "307576323776446465") {
@@ -43,15 +43,15 @@ module.exports.run = (client, sql, serverInfo, inDevelopment) => {
                 
                 } else {
                     //Otherwise load the bot as usual
-                    client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.Attachment("http://polliedev.com/assets/img/banner.png", "banner.png")).then(m => {
-                        const embed = new Discord.RichEmbed()
+                    client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.MessageAttachment("http://polliedev.com/assets/img/banner.png", "banner.png")).then(m => {
+                        const embed = new Discord.MessageEmbed()
                         .setColor([255,0,0])
                         .setImage('https://i.ytimg.com/vi/l1aNN9FzbFg/maxresdefault.jpg')
                         .setTitle('No song playing currently')
                         .setFooter(`Prefix for this server is ` + "`" + row.prefix +"`")
                         client.guilds.get(row.guildID).channels.get(row.musicChannelID).send(embed).then(playingMessage => {
                             serverInfo[row.guildID].playingMessage = playingMessage;
-                            client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.Attachment("http://polliedev.com/assets/img/line.png")).then(mm => {
+                            client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.MessageAttachment("http://polliedev.com/assets/img/line.png")).then(mm => {
                                 client.guilds.get(row.guildID).channels.get(row.musicChannelID).send("**__Queue list:__**").then(queueMessage => {
                                     serverInfo[row.guildID].queueMessage = queueMessage;
                                 })

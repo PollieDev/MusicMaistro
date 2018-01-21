@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports.run = (client, message, serverInfo, servers, sql, dev) => {
     if (message.member.hasPermission("ADMINISTRATOR") || message.author.id == dev) {
         message.channel.send(`Please provide me a prefix you would like to for use my commands, ${message.member}`).then(m => {
@@ -38,16 +40,16 @@ module.exports.run = (client, message, serverInfo, servers, sql, dev) => {
                         try {
                             if (serverInfo[message.guild.id] && serverInfo[message.guild.id].textChannel) {
                                 if (message.guild.channels.get(serverInfo[message.guild.id].textChannel)) chosenChannel = message.guild.channels.get(serverInfo[message.guild.id].textChannel).id;
-                                else await message.guild.createChannel("music_maistro").then(c => chosenChannel = c.id);    
+                                else await message.guild.channels.create("music_maistro").then(c => chosenChannel = c.id);    
                             } else {
-                                await message.guild.createChannel("music_maistro").then(c => chosenChannel = c.id);    
+                                await message.guild.channels.create("music_maistro").then(c => chosenChannel = c.id);    
                             }
 
                             if (serverInfo[message.guild.id] && serverInfo[message.guild.id].modRole) {
                                 if (message.guild.roles.get(serverInfo[message.guild.id].modRole)) chosenRole = message.guild.roles.get(serverInfo[message.guild.id].modRole).id;
-                                else await message.guild.createRole({name: "Music Maistro Mod"}).then(r => chosenRole = r.id);    
+                                else await message.guild.roles.create({name: "Music Maistro Mod"}).then(r => chosenRole = r.id);    
                             } else {
-                                await message.guild.createRole({name: "Music Maistro Mod"}).then(r => chosenRole = r.id);    
+                                await message.guild.roles.create({name: "Music Maistro Mod"}).then(r => chosenRole = r.id);    
                             }
 
                             sql.get(`select * from guilds where guildID = '${message.guild.id}'`).then(async row => {
@@ -67,18 +69,18 @@ module.exports.run = (client, message, serverInfo, servers, sql, dev) => {
                                 if (!client.guilds.get(message.guild.id).channels.get(chosenChannel))
                                     return
                     
-                                client.guilds.get(message.guild.id).channels.get(chosenChannel).fetchMessages().then(messages => {
+                                client.guilds.get(message.guild.id).channels.get(chosenChannel).messages.fetch().then(messages => {
                                     messages.forEach(message => {
                                         message.delete();
                                     });
-                                    client.guilds.get(message.guild.id).channels.get(chosenChannel).send('', new Discord.Attachment("http://polliedev.com/assets/img/banner.png", "banner.png")).then(m => {
-                                        const embed = new Discord.RichEmbed()
+                                    client.guilds.get(message.guild.id).channels.get(chosenChannel).send('', new Discord.MessageAttachment("http://polliedev.com/assets/img/banner.png", "banner.png")).then(m => {
+                                        const embed = new Discord.MessageEmbed()
                                         .setColor([255,0,0])
                                         .setImage('https://i.ytimg.com/vi/l1aNN9FzbFg/maxresdefault.jpg')
                                         .setTitle('No song playing currently')
                                         client.guilds.get(message.guild.id).channels.get(chosenChannel).send(embed).then(message => {
                                         serverInfo[message.guild.id].playingMessage = message;
-                                        client.guilds.get(message.guild.id).channels.get(chosenChannel).send('', new Discord.Attachment("http://polliedev.com/assets/img/line.png")).then(mm => {
+                                        client.guilds.get(message.guild.id).channels.get(chosenChannel).send('', new Discord.MessageAttachment("http://polliedev.com/assets/img/line.png")).then(mm => {
                                             client.guilds.get(message.guild.id).channels.get(chosenChannel).send("**__Queue list:__**").then(mmm => {
                                                 serverInfo[message.guild.id].queueMessage = mmm;
                                             })
