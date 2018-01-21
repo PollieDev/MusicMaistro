@@ -23,6 +23,6 @@ module.exports.run = (message, callback) => {
                               
 • ->Info                   :: To see the info of the bot + invite link`, {code: "asciidoc"});
 
-    await message.channel.send("Check your DM :wink:").then(m => m.delete( 5000))
+    await message.channel.send("Check your DM :wink:").then(m => m.delete({timeout: 5000}))
     callback();
 }

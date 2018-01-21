@@ -9,10 +9,10 @@ module.exports.run = (client, message, servers, userVoiceChannel, serverInfo, pr
         return message.author.send("You need to be in the Music Channel to voteskip songs!");
 
     if (!servers[message.guild.id])
-        return message.channel.send("Musicbot is not playing yet!").then(m=> m.delete(7500))
+        return message.channel.send("Musicbot is not playing yet!").then(m=> m.delete({timeout: 7500}))
 
     if (!servers[message.guild.id].isPlaying || !servers[message.guild.id].dispatcher)
-        return message.channel.send("Musicbot isn't even playing :thinking:").then(m=> m.delete( 7500))
+        return message.channel.send("Musicbot isn't even playing :thinking:").then(m=> m.delete({timeout: 7500}))
 
     var server = servers[message.guild.id];
     var votesToSkip = Math.round((userVoiceChannel.members.array().length - 1) / 2);

@@ -61,3 +61,4 @@ typings/
 src/tokens.js
 .vscode/launch.json
 src/sqlite/db.sqlite
+src/sqlite/dbOff.sqlite

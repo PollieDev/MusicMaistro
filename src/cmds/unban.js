@@ -3,24 +3,26 @@ const Discord = require('discord.js');
 module.exports.run = (client, message, serverInfo, sql, args) => {
     if (message.member.hasPermission("ADMINISTRATOR") || message.member.roles.has(serverInfo[message.guild.id].modRole)) {
         if (message.mentions.users.first() == undefined) {
-            var embed = new Discord.RichEmbed()
+            var embed = new Discord.MessageEmbed()
             .setAuthor("Incorrect Parameter! Please use a Discord mention of the person you'd like to unban")
             .setColor([255,177,0])
-            message.author.send(embed);
+            message.channel.send(embed).then(m => m.delete({timeout: 7500}))
         } else {
             const bannedUser = message.mentions.users.first();
             sql.get(`SELECT * FROM banned WHERE DiscordId ="${mysql_real_escape_string(bannedUser.id)}" AND ServerID = ${message.guild.id}`).then(row => {
                 if (!row) {
-                    var embed = new Discord.RichEmbed()
-                    .setAuthor(`User ${bannedUser} was not found in the ban list.`)
+                    var embed = new Discord.MessageEmbed()
+                    .setAuthor(`User ${bannedUser.tag} was not found in the ban list.`)
                     .setColor([255,177,0])
-                    message.author.send(embed);
+                    message.channel.send(embed).then(m => m.delete({timeout: 7500}))
                 } else {
                     sql.run(`DELETE FROM banned WHERE DiscordId ="${mysql_real_escape_string(bannedUser.id)}" AND ServerID = ${message.guild.id}`);
-                    var embed = new Discord.RichEmbed()
-                    .setAuthor(`User ${bannedUser} was unbanned.`)
+                    var embed = new Discord.MessageEmbed()
+                    .setAuthor(`User ${bannedUser.tag} was unbanned and can request songs again.`)
                     .setColor([255,177,0])
-                    message.author.send(embed);
+                    message.channel.send(embed).then(m => m.delete({timeout: 7500}))
+                    var index = serverInfo[message.guild.id].banned.indexOf(bannedUser.id);
+                    delete serverInfo[message.guild.id].banned[index]
                 }
               }).catch(() => {
                 console.error;

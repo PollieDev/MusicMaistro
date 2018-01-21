@@ -1,11 +1,11 @@
 module.exports.run = (client, message, serverInfo, sql, args) => {
     if (message.member.hasPermission("ADMINISTRATOR") || message.member.roles.has(serverInfo[message.guild.id].modRole)) {                       
         if (serverInfo[message.guild.id].playlistsAllowed == 1) {
-            message.channel.send("**:x: __Playlist are now disabled on this server.__**").then(m=>m.delete(10000))
+            message.channel.send("**:x: __Playlist are now disabled on this server.__**").then(m=>m.delete({timeout: 10000}))
             serverInfo[message.guild.id].playlistsAllowed = 0;
             sql.run(`update guilds set playlists = 0 where guildID = '${message.guild.id}'`)
         } else if (serverInfo[message.guild.id].playlistsAllowed == 0) {
-            message.channel.send("**:white_check_mark: __Playlist are now enabled on this server.__**").then(m=>m.delete(10000))
+            message.channel.send("**:white_check_mark: __Playlist are now enabled on this server.__**").then(m=>m.delete({timeout: 10000}))
             serverInfo[message.guild.id].playlistsAllowed = 1;
             sql.run(`update guilds set playlists = 1 where guildID = '${message.guild.id}'`)
         }

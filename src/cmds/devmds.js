@@ -22,7 +22,7 @@ module.exports.run = async (client, message, process, args, sql, dev, lockdown, 
         sql.all(`select * from guilds`).then(rows => {
             rows.forEach(row => {
                 client.channels.get(row.musicChannelID).send(`:arrow_right: **Music Bot back online!** :arrow_left:`).then(msg => {
-                    msg.delete( 20000)
+                    msg.delete({timeout: 20000})
                 })
             });
         });

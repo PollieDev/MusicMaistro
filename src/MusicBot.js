@@ -167,6 +167,8 @@ function loadPlaylist(message, args) {
         return message.author.send("Playlists are disabled on this server by the staff.\nContact them to enable it.")
     }
 
+    if (serverInfo[message.guild.id].banned.includes(message.author.id)) return message.author.send("You have been banned from requesting songs. Please contact staff if this was a mistake.")
+
 
     if (lockdown && message.guild.id != "307576323776446465") return;
     var vc = message.member.voiceChannel;
@@ -193,7 +195,7 @@ function loadPlaylist(message, args) {
 
     sql.all(`select * from songs where playlistName = '${mysql_real_escape_string(args[1])}' and discordID = '${message.author.id}'`).then(async rows => {
         if (rows.length == 0) {
-            message.channel.send(":x: I could not find your playlist or your playlist is empty!").then(m => m.delete( 5000))
+            message.channel.send(":x: I could not find your playlist or your playlist is empty!").then(m => m.delete({timeout: 5000}))
         } else {
 
             joined = false;
@@ -260,6 +262,7 @@ async function loadYtpl(message, args) {
         return message.author.send("Playlists are disabled on this server by the staff.\nContact them to enable it.")
     }
 
+    if (serverInfo[message.guild.id].banned.includes(message.author.id)) return message.author.send("You have been banned from requesting songs. Please contact staff if this was a mistake.")
 
     if (lockdown && message.guild.id != "307576323776446465") return;
     var vc = message.member.voiceChannel;
@@ -363,6 +366,8 @@ async function loadSong(message, args) {
         return message.member.send("The music bot is restricted to\n**" + message.guild.channels.get(serverInfo[message.guild.id].voiceChannel).name + "**")
     }
 
+    if (serverInfo[message.guild.id].banned.includes(message.author.id)) return message.author.send("You have been banned from requesting songs. Please contact staff if this was a mistake.")
+
 
     if (lastMessage[message.author.id] + 5000 > new Date().getTime()) return message.member.send("Oh oh, calm down. Only 1 request every 5 seconds");
     lastMessage[message.author.id] = new Date().getTime()
@@ -379,7 +384,7 @@ async function loadSong(message, args) {
             youtube.searchVideos(message.content, 1)
                 .then(async videos => {
                     await YTDL.getInfo(`https://www.youtube.com/watch?v=${videos[0].id}`, (err, info) => {
-                        if (err) return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete( 5000))
+                        if (err) return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete({timeout: 5000}))
 
                         if (!message.member.hasPermission("ADMINISTRATOR") && !message.member.roles.has(serverInfo[message.guild.id].modRole)) {
                             if (serverInfo[message.guild.id].maxTime && parseInt(info.length_seconds) > serverInfo[message.guild.id].maxTime) return message.author.send("There is a timelimit of `" + fancyTimeFormat(serverInfo[message.guild.id].maxTime) + "` in this server.\nYour song has been denied.")
@@ -406,7 +411,7 @@ async function loadSong(message, args) {
                 })
                 .catch(err => {
                     console.log(err)
-                    return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete( 5000))
+                    return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete({timeout: 5000}))
                 });
         } else {
 

@@ -112,7 +112,7 @@ module.exports.run = async (client, message, args, sql) => {
                 if (row) {
                     if (args[1].toLowerCase() == "add") {
                         await YTDL.getInfo(args[3], (err, info) => {
-                            if (err) return message.channel.send("Only long Youtube links are supported: `https://www.youtube.com/watch?v=xXxXxXxX` as example").then(m => m.delete( 5000))
+                            if (err) return message.channel.send("Only long Youtube links are supported: `https://www.youtube.com/watch?v=xXxXxXxX` as example").then(m => m.delete({timeout: 5000}))
 
                             message.channel.send(`Is this the song you want to add:\n**${info.title}**\n\nIf so please typ *Yes*. If not, typ *No*`)
 

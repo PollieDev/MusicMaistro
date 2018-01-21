@@ -16,7 +16,8 @@ module.exports.run = (client, sql, serverInfo, inDevelopment) => {
                 maxTime: row.maxtime,
                 modRole: row.musicModRole,
                 playlistsAllowed: row.playlists,
-                voteSkips: []
+                voteSkips: [],
+                banned: []
             };
 
             if (!client.guilds.get(row.guildID)) {
@@ -33,6 +34,12 @@ module.exports.run = (client, sql, serverInfo, inDevelopment) => {
                 console.log("No permission to read channel")
                 return sql.run(`delete from guilds where guildID = '${row.guildID}'`);
             }
+
+            sql.all(`select * from banned where ServerID = '${row.guildID}'`).then(rows => {
+                for (let i = 0; i < rows.length; i++) {
+                    serverInfo[row.guildID].banned.push(rows[i].DiscordID);
+                }
+            })
 
             client.guilds.get(row.guildID).channels.get(row.musicChannelID).messages.fetch().then(messages => {
                 client.guilds.get(row.guildID).channels.get(row.musicChannelID).bulkDelete(messages)
