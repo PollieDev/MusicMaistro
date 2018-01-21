@@ -46,7 +46,7 @@ client.on('message', async message => {
 
     //Temporary until this stupid bot is fixed
     if (args[0].toLowerCase() == "//restart" && message.author.id == dev) process.exit(0);
-
+ 
     if (message.channel.type == "text") {
         //if the server is not setup and neither does it start with default prefix then we don't need them to continue
         if (!serverInfo[message.guild.id] && !message.content.startsWith("->")) return;
@@ -62,7 +62,7 @@ client.on('message', async message => {
 
             if (command) {
                 const userVoiceChannel = message.member.voiceChannel;
-            
+                
                 switch (command) {
                     case "voteskip":
                         require("./cmds/voteskip.js").run(client, message, servers, userVoiceChannel, serverInfo, prefix);
@@ -77,7 +77,6 @@ client.on('message', async message => {
                     case "setvc":
                         require("./cmds/setvc.js").run(client, message, serverInfo, sql, args);
                         break;
-
 
                     case "settime":
                         require("./cmds/settime.js").run(client, message, serverInfo, sql, args);
@@ -104,12 +103,18 @@ client.on('message', async message => {
                         loadPlaylist(message, args);
                         break;
 
-
                     case "ytpl":
                         loadYtpl(message, args);
                         break;
 
-
+                    case "ban":
+                        require("./cmds/ban.js").run(client, message, serverInfo, sql, args);
+                        break;
+                        
+                    case "unban":
+                        require("./cmds/unban.js").run(client, message, serverInfo, sql, args);
+                        break;    
+                    
                     default:
                         break;
                 }
