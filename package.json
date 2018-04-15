@@ -5,7 +5,7 @@
   "main": "src/MusicBot.js",
   "scripts": {
     "test": "nodemon --inspect src/MusicBot.js",
-    "production": "node src/MusicBot.js --production"
+    "start": "node src/MusicBot.js --production"
   },
   "keywords": [
     "Discord",
@@ -27,9 +27,9 @@
     "node-schedule": "^1.2.5",
     "simple-youtube-api": "^5.0.0",
     "sqlite": "^2.9.0",
-    "ytdl-core": "^0.18.5"
+    "ytdl-core": "^0.20.1"
   },
   "devDependencies": {
-    "nodemon": "^1.14.10"
+    "nodemon": "^1.15.1"
   }
 }

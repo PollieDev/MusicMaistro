@@ -43,45 +43,49 @@ module.exports.run = async (client, message, process, args, sql, dev, lockdown, 
 
         } else if (args[1].toLowerCase() == "today") {
 
-            var msg = `==          STATS TODAY          ==   SONGS   ==   SKIPS   ==   REMOVES `
-            
-            for (var k in channels) {
-                guildName = client.guilds.get(k).name
-                if (guildName.length > 29) guildName = guildName.substring(0,26) + "...";
-                for (let index = 30 - guildName.length; index > 0; index--) {
-                    guildName += " ";
+            sql.all(`select * from guilds`).then(async rows => {
+                var msg = `==          STATS TODAY          ==   SONGS   ==   SKIPS   ==   REMOVES `;
+
+                for (let i = 0; i < rows.length; i++) {
+                    var k = rows[i].guildID;
+
+                    guildName = client.guilds.get(k).name
+                    if (guildName.length > 29) guildName = guildName.substring(0,26) + "...";
+                    for (let index = 30 - guildName.length; index > 0; index--) {
+                        guildName += " ";
+                    }
+                    msg += `\n• ${guildName} :: `
+                    await sql.get(`select * from currentStats where guild = '${k}' and action = 'song'`).then(songs => {
+
+                        if (songs) songsTotal = songs.value;
+                        else songsTotal = 0;
+                        for (let index = 8 - songsTotal.toString().length; index > 0; index--) {
+                            songsTotal += " ";
+                        }
+                        msg += `  ${songsTotal}::`    
+                    })
+
+                    await sql.get(`select * from currentStats where guild = '${k}' and action = 'skip'`).then(skip => {
+
+                        if (skip) skipsTotal = skip.value;
+                        else skipsTotal = 0;
+                        for (let index = 8 - skipsTotal.toString().length; index > 0; index--) {
+                            skipsTotal += " ";
+                        }
+                        msg += `   ${skipsTotal}::`    
+                    })
+
+                    await sql.get(`select * from currentStats where guild = '${k}' and action = 'remove'`).then(remove => {
+
+                        if (remove) removeTotal = remove.value;
+                        else removeTotal = 0;
+                        msg += `   ${removeTotal}`    
+                    })
+                    
                 }
-                msg += `\n• ${guildName} :: `
-                await sql.get(`select * from currentStats where guild = '${k}' and action = 'song'`).then(songs => {
+                message.channel.send(msg, {code: "asciidoc"});
+            })
 
-                    if (songs) songsTotal = songs.value;
-                    else songsTotal = 0;
-                    for (let index = 8 - songsTotal.toString().length; index > 0; index--) {
-                        songsTotal += " ";
-                    }
-                    msg += `  ${songsTotal}::`    
-                })
-
-                await sql.get(`select * from currentStats where guild = '${k}' and action = 'skip'`).then(skip => {
-
-                    if (skip) skipsTotal = skip.value;
-                    else skipsTotal = 0;
-                    for (let index = 8 - skipsTotal.toString().length; index > 0; index--) {
-                        skipsTotal += " ";
-                    }
-                    msg += `   ${skipsTotal}::`    
-                })
-
-                await sql.get(`select * from currentStats where guild = '${k}' and action = 'remove'`).then(remove => {
-
-                    if (remove) removeTotal = remove.value;
-                    else removeTotal = 0;
-                    msg += `   ${removeTotal}`    
-                })
-                
-            }
-
-            message.channel.send(msg, {code: "asciidoc"});
         } else if (args.length == 2) {
             await sql.get(`select * from stats where time = '${args[1]}'`).then(async row => {
                 if (!row) {
@@ -131,4 +135,24 @@ module.exports.run = async (client, message, process, args, sql, dev, lockdown, 
             })
         }
     }
+}
+
+
+function fancyTimeFormat(time)
+{   
+    // Hours, minutes and seconds
+    var hrs = ~~(time / 3600);
+    var mins = ~~((time % 3600) / 60);
+    var secs = time % 60;
+
+    // Output like "1:01" or "4:03:59" or "123:03:59"
+    var ret = "";
+
+    if (hrs > 0) {
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+    }
+
+    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs;
+    return ret;
 }

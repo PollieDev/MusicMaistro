@@ -60,11 +60,12 @@ module.exports.run = (client, message, serverInfo, servers, sql, dev) => {
                                 }
                                 await message.channel.send("__Core configuration has been setup!__\nPrefix: **" + chosenPrefix + "** (More info on "+ chosenPrefix +"help)\nChannel: **<#" + chosenChannel + ">** (You can move this to wherever you would like!)\nRole: **" + message.guild.roles.get(chosenRole).name + "**\n\n__Further configurations you can do (These commands only work in <#" + chosenChannel + "> & by a Music Maistro Mod or Administrator):__\n- `" + chosenPrefix + "setvc <?off>` -- Do " + chosenPrefix + "setvc when being in a voicechannel to restrict the use only to that channel. `" + chosenPrefix + "setvc off` to disable that again.\n- `" + chosenPrefix + "setTime <minutes>:<seconds>` -- To set a max length on requested songs of members. (`" + chosenPrefix + "setTime off`) to disable again. Music Maistro Mod & Administrators ignore the limit")
 
-                                if (!serverInfo[message.guild.id]) serverInfo[message.guild.id] = {}
-                                serverInfo[message.guild.id].prefix = chosenPrefix
-                                serverInfo[message.guild.id].textChannel = chosenChannel
-                                serverInfo[message.guild.id].modRole = chosenRole
-                                serverInfo[message.guild.id].voteSkips = []
+                                if (!serverInfo[message.guild.id]) serverInfo[message.guild.id] = {};
+                                serverInfo[message.guild.id].prefix = chosenPrefix;
+                                serverInfo[message.guild.id].textChannel = chosenChannel;
+                                serverInfo[message.guild.id].modRole = chosenRole;
+                                serverInfo[message.guild.id].voteSkips = [];
+                                serverInfo[message.guild.id].banned = [];
 
                                 if (!client.guilds.get(message.guild.id).channels.get(chosenChannel))
                                     return

@@ -1,10 +1,10 @@
-module.exports.run = (message, callback) => {
+module.exports.run = async (message, callback, prefix) => {
     await message.author.send(`= HELP MENU =
 • ->Setup                  :: To setup the required information for the bot. 
                               (Can only be done by a member with ADMINISTRATOR permission)
 • ${prefix}Playlists               :: Enables / Disables playlists for this server. Only for the desired role or administrator
                               [Only works in the music channel]
-• ${prefix}playlist <playlistname> :: Adds the songs from the playlist to the queue. Only when enabled ^
+• ${prefix}ytpl <playlistlink>     :: Adds the songs from the playlist to the queue. Only when enabled ^
                               [Only works in the music channel]
 • ${prefix}Reload                  :: Reloads the musicbot. Only for the desired role or administrator
                               [Only works in the music channel]

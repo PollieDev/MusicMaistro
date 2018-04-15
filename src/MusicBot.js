@@ -104,7 +104,7 @@ client.on('message', async message => {
                         break;
 
                     case "ytpl":
-                        loadYtpl(message, args);
+                        loadYtpl(message, args, prefix);
                         break;
 
                     case "ban":
@@ -135,7 +135,7 @@ client.on('message', async message => {
         if (command == "help") {
             require("./cmds/help.js").run(message, () => {
                 addToStats("help", message.guild.id)
-            })
+            }, prefix)
         }
 
 
@@ -257,7 +257,7 @@ function loadPlaylist(message, args) {
 
 
 //
-async function loadYtpl(message, args) {
+async function loadYtpl(message, args, prefix) {
     if (serverInfo[message.guild.id].playlistsAllowed == 0) {
         return message.author.send("Playlists are disabled on this server by the staff.\nContact them to enable it.")
     }
@@ -346,6 +346,7 @@ async function loadYtpl(message, args) {
     })
     .catch(err => {
         console.log(err);
+        message.member.send("The playlist was not found.")
     })
 
     updateQueue(message.guild.id);
@@ -384,7 +385,10 @@ async function loadSong(message, args) {
             youtube.searchVideos(message.content, 1)
                 .then(async videos => {
                     await YTDL.getInfo(`https://www.youtube.com/watch?v=${videos[0].id}`, (err, info) => {
-                        if (err) return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete({timeout: 5000}))
+                        if (err) {
+                            console.log(err, `https://www.youtube.com/watch?v=${videos[0].id}`);
+                            return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete({timeout: 5000}))
+                        } 
 
                         if (!message.member.hasPermission("ADMINISTRATOR") && !message.member.roles.has(serverInfo[message.guild.id].modRole)) {
                             if (serverInfo[message.guild.id].maxTime && parseInt(info.length_seconds) > serverInfo[message.guild.id].maxTime) return message.author.send("There is a timelimit of `" + fancyTimeFormat(serverInfo[message.guild.id].maxTime) + "` in this server.\nYour song has been denied.")
@@ -414,7 +418,6 @@ async function loadSong(message, args) {
                     return message.channel.send("Something went wrong. Please contact the developer!").then(m => m.delete({timeout: 5000}))
                 });
         } else {
-
             if (!message.member.hasPermission("ADMINISTRATOR") && !message.member.roles.has(serverInfo[message.guild.id].modRole)) {
                 if (serverInfo[message.guild.id].maxTime && parseInt(info.length_seconds) > serverInfo[message.guild.id].maxTime) return message.author.send("There is a timelimit of `" + fancyTimeFormat(serverInfo[message.guild.id].maxTime) + "` in this server.\nYour song has been denied.")
             }
@@ -575,7 +578,7 @@ var d = schedule.scheduleJob({hour: 23, minute: 55}, function(){
         rows.forEach(row => {
             sql.run(`Insert into stats(action, guild, value, time) VALUES ('${row.action}', '${row.guild}', '${row.value}', '${convertDate(new Date())}')`);
         });
-        sql.run("delete from sqlite_sequence where name='currentStats'")
+        sql.run("delete from currentStats")
     })
 });
 
