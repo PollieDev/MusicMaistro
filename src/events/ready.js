@@ -50,15 +50,15 @@ module.exports.run = (client, sql, serverInfo, inDevelopment) => {
                 
                 } else {
                     //Otherwise load the bot as usual
-                    client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.MessageAttachment("http://polliedev.com/assets/img/banner.png", "banner.png")).then(m => {
+                    client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.MessageAttachment("https://cdn.discordapp.com/attachments/397883704061722624/405790071090970625/banner.png", "banner.png")).then(m => {
                         const embed = new Discord.MessageEmbed()
                         .setColor([255,0,0])
-                        .setImage('https://i.ytimg.com/vi/l1aNN9FzbFg/maxresdefault.jpg')
+                        .setImage('http://i0.kym-cdn.com/photos/images/newsfeed/001/273/780/f05.png')
                         .setTitle('No song playing currently')
                         .setFooter(`Prefix for this server is ` + "`" + row.prefix +"`")
                         client.guilds.get(row.guildID).channels.get(row.musicChannelID).send(embed).then(playingMessage => {
                             serverInfo[row.guildID].playingMessage = playingMessage;
-                            client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.MessageAttachment("http://polliedev.com/assets/img/line.png")).then(mm => {
+                            client.guilds.get(row.guildID).channels.get(row.musicChannelID).send('', new Discord.MessageAttachment("https://cdn.discordapp.com/attachments/397883704061722624/405790072626085899/line.png")).then(mm => {
                                 client.guilds.get(row.guildID).channels.get(row.musicChannelID).send("**__Queue list:__**").then(queueMessage => {
                                     serverInfo[row.guildID].queueMessage = queueMessage;
                                 })

@@ -22,7 +22,7 @@
   "homepage": "http://Polliedev.com",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "discordjs/discord.js",
     "node-opus": "^0.2.7",
     "node-schedule": "^1.2.5",
     "simple-youtube-api": "^5.0.0",
