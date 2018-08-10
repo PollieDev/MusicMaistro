@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 
 module.exports.run = (client, message, serverInfo, servers, sql, dev) => {
     if (message.member.hasPermission("ADMINISTRATOR") || message.author.id == dev) {
-        message.channel.send(`Please provide me a prefix you would like to for use my commands, ${message.member}`).then(m => {
+        message.channel.send(`Please provide me a prefix you would like to use for my commands, ${message.member}`).then(m => {
             const filter = m => m.author.id == message.author.id;
             message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] })
                 .then(async collected1 => {
